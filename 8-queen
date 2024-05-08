@@ -1,50 +1,38 @@
-#include <iostream>
-#include <vector>
-using namespace std;
+def follow(c):
+    global m
+    if a[0][0] == c:
+        f.add('$')
+    for i in range(n):
+        for j in range(2, len(a[i])):
+            if a[i][j] == c:
+                if a[i][j+1:]:
+                    first(a[i][j+1])
+                elif c != a[i][0]:
+                    follow(a[i][0])
 
-const int N = 8;
+def first(c):
+    global m
+    if c.islower() or c == '$':
+        f.add(c)
+    else:
+        for k in range(n):
+            if a[k][0] == c:
+                if a[k][2] == '$':
+                    follow(a[k][0])
+                else:
+                    first(a[k][2])
 
-bool isSafe(const vector<vector<int> >& board, int row, int col) {
-    for (int x = 0; x < col; x++) {
-        if (board[row][x] == 1)
-            return false;
-    }
-    for (int x = row, y = col; x >= 0 && y >= 0; x--, y--) {
-        if (board[x][y] == 1)
-            return false;
-    }
-    for (int x = row, y = col; x < N && y >= 0; x++, y--) {
-        if (board[x][y] == 1)
-            return false;
-    }
-    return true;
-}
+n = int(input("Enter the number of productions: "))
+a = [input("Enter production {}: ".format(i+1)) for i in range(n)]
+f = set()
 
-bool solveNQueens(vector<vector<int> >& board, int col) {
-    if (col == N) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++)
-                cout << board[i][j] << " ";
-            cout << endl;
-        }
-        return true;
-    }
-    for (int i = 0; i < N; i++) {
-        if (isSafe(board, i, col)) {
-            board[i][col] = 1;
-            if (solveNQueens(board, col + 1)) { 
-                return true;
-            }
-            board[i][col] = 0;
-        }
-    }
-    return false;
-}
-
-int main() {
-    vector<vector<int> > board(N, vector<int>(N, 0));
-    if (!solveNQueens(board, 0)) {
-        cout << "No solution found";
-    }
-    return 0;
-}
+while True:
+    m = 0
+    c = input("Enter the element whose FIRST & FOLLOW is to be found: ").strip()
+    first(c)
+    print("FIRST({}) = {{{}}}".format(c, ', '.join(sorted(f))))
+    follow(c)
+    print("FOLLOW({}) = {{{}}}".format(c, ', '.join(sorted(f - {c}))))
+    z = int(input("Do you want to continue? (0/1): "))
+    if z != 1:
+        break
